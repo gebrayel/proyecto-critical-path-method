@@ -4,7 +4,7 @@
 from typing import ForwardRef
 from node import *
 from graph import *
-
+import sys
 
 
 graph : Graph
@@ -18,7 +18,8 @@ def cpm(graphVal: Graph):
     alterNodesId:list = []
     arrayQueue:list = []
     graphX = graphVal
-    alterNodesId = nodesId
+    for node in nodesId:
+        alterNodesId.append(node)
     #forward
     alterNodesId.pop(0)
     for i in alterNodesId:
@@ -53,9 +54,10 @@ def cpm(graphVal: Graph):
     for i in nodesId:
         print(f'Nodo: {i}, ES: {graphX.nodes_dict[i].es}, EF: {graphX.nodes_dict[i].ef}')
     #forward
-    alterNodesId = nodesId
-    alterNodesId.pop(0)
+    #alterNodesId = nodesId
+    #alterNodesId.pop(0)
     #backward
+    print(alterNodesId)
     auxiliaryArray: list = []
     for i in alterNodesId:
         for j in graphX.nodes_dict[i].pred:
@@ -69,7 +71,8 @@ def cpm(graphVal: Graph):
         arrayQueue.append(j)
         index = alterNodesId.index(j)
         alterNodesId.pop(index)
-    
+    print(alterNodesId)
+    print(nodesId)
     while len(arrayQueue) != 0:
         predNodes:list = []
         sucNodes:list = []
@@ -81,7 +84,7 @@ def cpm(graphVal: Graph):
                 if i not in arrayQueue:
                     arrayQueue.append(i)
         else:
-            for i in alterNodesId:
+            for i in nodesId:
                 if actual in graphX.nodes_dict[i].pred:
                     sucNodes.append(i)
             valid = True
@@ -91,9 +94,9 @@ def cpm(graphVal: Graph):
                     break
             
             if valid:
-                maxLS = 0
+                maxLS = sys.maxsize
                 for i in sucNodes:
-                    if graphX.nodes_dict[i].ls > maxLS:
+                    if graphX.nodes_dict[i].ls < maxLS:
                         maxLS = graphX.nodes_dict[i].ls
                 graphX.nodes_dict[actual].lf = maxLS
                 graphX.nodes_dict[actual].ls = maxLS - graphX.nodes_dict[actual].duration
@@ -102,7 +105,6 @@ def cpm(graphVal: Graph):
                         arrayQueue.append(j)
     for i in nodesId:
         print(f'Nodo: {i}, LS: {graphX.nodes_dict[i].ls}, LF: {graphX.nodes_dict[i].lf}')
-    
     #backward
 
 
