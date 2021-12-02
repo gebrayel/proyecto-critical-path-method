@@ -82,7 +82,7 @@ def cpm(graphVal: Graph):
                     arrayQueue.append(i)
         else:
             for i in alterNodesId:
-                if i in graphX.nodes_dict[i].pred:
+                if actual in graphX.nodes_dict[i].pred:
                     sucNodes.append(i)
             valid = True
             for j in sucNodes:
