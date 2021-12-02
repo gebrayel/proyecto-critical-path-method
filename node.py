@@ -1,6 +1,6 @@
 class  Node:
 
-    def __init__(self, id: int, description: str, duration: float, predecesores: list) -> None:
+    def __init__(self, id: str or int, description: str, duration: float, predecesores: list) -> None:
         self.id = id
         self.description = description
         self.visitedForward = False
@@ -21,10 +21,10 @@ class  Node:
     def visitBackward (self):
         self.visitedBackward = True
 
-    def add_predecesor (self, pred: int):
+    def add_predecesor (self, pred: str):
         self.pred.append(pred)
 
-    def add_sucesor (self, suc:int):
+    def add_sucesor (self, suc:str):
         self.suces.append(suc)
 
     def set_description(self, description: str):
