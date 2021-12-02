@@ -54,6 +54,12 @@ def cpm(graphVal: Graph):
         print(f'Nodo: {i}, ES: {graphX.nodes_dict[i].es}, EF: {graphX.nodes_dict[i].ef}')
     #forward
 
+    #backward
+    
+    #backward
+
+
+
 
         
 
