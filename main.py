@@ -129,9 +129,10 @@ def cpm(graphVal: Graph):
     end = []
     final = ""
 
-    for i in nodesId:
-        if graphX.nodes_dict[i].pred[0] == 0:
-            start.append(graphX.nodes_dict[graphX.nodes_dict[i].pred[0]])
+    for i in nodesId:   
+        if i != "0":
+            if graphX.nodes_dict[i].pred[0] == "0":
+                start.append(i)
     auxiliaryArray: list = []
 
     for i in alterNodesId:
@@ -148,7 +149,7 @@ def cpm(graphVal: Graph):
     for i in start:
             if graphX.nodes_dict[i].holgura == 0:
                 actualId = i
-                inicio = 0
+                inicio = i
     while loop:
         sucChoose = []
         path.append(actualId)
@@ -156,15 +157,25 @@ def cpm(graphVal: Graph):
         for i in nodesId:
             if actualId in graphX.nodes_dict[i].pred:
                 sucChoose.append(i)
-
+        print(sucChoose)
         for i in sucChoose:
             if graphX.nodes_dict[i].holgura == 0:
                 actualId = i
+                path.append(actualId)
                 break
         final = actualId
         loop = False
 
-    print(f'CPM: {((i+"==>" if i!=path[len(path)-1] else i) for i in path)}')
+    pathStr = ""
+    for i in path:
+        if i != path[len(path)-1]:
+            pathStr += i+" ==> "
+        else:
+            pathStr += i
+
+    
+    print(path)
+    print(f'CPM: {pathStr}')
     print(f'INICIAL: { inicio }')
     print(f'FINAL: { final }')
 
