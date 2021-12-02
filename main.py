@@ -23,12 +23,12 @@ def cpm(graphVal: Graph):
     #forward
     alterNodesId.pop(0)
     for i in alterNodesId:
-            if graphX.nodes_dict[i].pred[0] == 0:
+            if graphX.nodes_dict[i].pred[0] == "0":
                 arrayQueue.append(graphX.nodes_dict[i].id)
     while len(arrayQueue) !=0:
         predNodes:list = []
         actual = arrayQueue.pop()
-        if graphX.nodes_dict[actual].pred[0] == 0:
+        if graphX.nodes_dict[actual].pred[0] == "0":
             graphX.nodes_dict[actual].ef += graphX.nodes_dict[actual].duration
             for j in alterNodesId:
                 if actual in graphX.nodes_dict[j].pred:
@@ -54,8 +54,10 @@ def cpm(graphVal: Graph):
     for i in nodesId:
         print(f'Nodo: {i}, ES: {graphX.nodes_dict[i].es}, EF: {graphX.nodes_dict[i].ef}')
     #forward
+
     #alterNodesId = nodesId
     #alterNodesId.pop(0)
+
     #backward
     print(alterNodesId)
     auxiliaryArray: list = []
@@ -105,6 +107,8 @@ def cpm(graphVal: Graph):
                         arrayQueue.append(j)
     for i in nodesId:
         print(f'Nodo: {i}, LS: {graphX.nodes_dict[i].ls}, LF: {graphX.nodes_dict[i].lf}')
+
+    
     #backward
 
 
@@ -118,8 +122,8 @@ def cpm(graphVal: Graph):
 def create():
     graph = Graph()
     loop = "2"
-    graph.add_node(0, "nodo 0", 0, [])
-    nodesId.append(0)
+    graph.add_node("0", "nodo 0", 0, [])
+    nodesId.append("0")
 
     while loop == "2":
         #if len(nodesId) < 1:
@@ -145,34 +149,34 @@ def create():
         #    print ("2. No")
         #    loop = str(input("Ingrese 1 o 2 segun corresponda: "))
 
-            id = int(input("Ingrese el id de la actividad: "))
+            id = input("Ingrese el id de la actividad: ")
             descripcion = str(input("Ingrese la descripcion de la actividad: "))
             duracion = float(input("Ingrese la duracion de la actividad: "))      
             pre = input("Ingrese los ids de sus predecesores separados por comas: ")
             while "0" in pre.split(",") and len(pre.split(",")) > 1:
                 pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
-            pre= pre.split(",") 
-            pres = []
-            for p in pre:
-                pres.append(int(p))
+            pre = pre.split(",") 
+            #pres = []
+            #for p in pre:
+            #    pres.append(int(p))
             
             valid = True
             while valid:
                 a = True
-                for p in pres:
-                    if p not in nodesId:
+                for p in pre:
+                    if p not in nodesId not in nodesId:
                         a = False
                         break
                 if a == False:
                     pre = input(f"No existe un nodo {p} en el grafo. Ingrese los ids de sus predecesores separados por comas: ")
                     pre = pre.split(",")
-                    pres = []   
-                    for p in pre:
-                        pres.append(int(p))
+                    #pres = []   
+                    #for p in pre:
+                    #    pres.append(int(p))
                 else:
                     valid = False
 
-            graph.add_node(id, descripcion, duracion, pres)
+            graph.add_node(id, descripcion, duracion, pre)
             
             #for p in pres:
             #    print(p)
@@ -183,7 +187,6 @@ def create():
             print ("1. Si")
             print ("2. No")
             loop = input("Ingrese 1 o 2 segun corresponda: ")
-
 
     return graph
 
