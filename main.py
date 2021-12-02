@@ -4,7 +4,7 @@
 from typing import ForwardRef
 from node import *
 from graph import *
-
+import sys
 
 
 graph : Graph
@@ -94,9 +94,9 @@ def cpm(graphVal: Graph):
                     break
             
             if valid:
-                maxLS = 0
+                maxLS = sys.maxsize
                 for i in sucNodes:
-                    if graphX.nodes_dict[i].ls > maxLS:
+                    if graphX.nodes_dict[i].ls < maxLS:
                         maxLS = graphX.nodes_dict[i].ls
                 graphX.nodes_dict[actual].lf = maxLS
                 graphX.nodes_dict[actual].ls = maxLS - graphX.nodes_dict[actual].duration
