@@ -1,14 +1,63 @@
 #import networkx as nx
 ##import matplotlib.pyplot as plt
 #from networkx.algorithms import graph_hashing
+from typing import ForwardRef
 from node import *
 from graph import *
 
 
 
 graph : Graph
-
+graphX: Graph
 nodesId = []
+
+# def forwardPass():
+
+
+def cpm(graphVal: Graph):
+    alterNodesId:list = []
+    arrayQueue:list = []
+    graphX = graphVal
+    alterNodesId = nodesId
+    #forward
+    alterNodesId.pop(0)
+    for i in alterNodesId:
+            if graphX.nodes_dict[i].pred[0] == 0:
+                arrayQueue.append(graphX.nodes_dict[i].id)
+    while len(arrayQueue) !=0:
+        predNodes:list = []
+        actual = arrayQueue.pop()
+        if graphX.nodes_dict[actual].pred[0] == 0:
+            graphX.nodes_dict[actual].ef += graphX.nodes_dict[actual].duration
+            for j in alterNodesId:
+                if actual in graphX.nodes_dict[j].pred:
+                    arrayQueue.append(j)
+        else:
+            predNodes = graphX.nodes_dict[actual].pred
+            valid = True
+            for k in predNodes:
+                if graphX.nodes_dict[k].ef == 0:
+                    valid = False
+                    break
+            if valid:
+                maxEF = 0
+                for n in predNodes:
+                    if graphX.nodes_dict[n].ef > maxEF:
+                        maxEF = graphX.nodes_dict[n].ef
+                graphX.nodes_dict[actual].es = maxEF
+                graphX.nodes_dict[actual].ef = maxEF +graphX.nodes_dict[actual].duration
+                for l in alterNodesId:
+                    if actual in graphX.nodes_dict[l].pred:
+                        arrayQueue.append(l)
+
+    for i in nodesId:
+        print(f'Nodo: {i}, ES: {graphX.nodes_dict[i].es}, EF: {graphX.nodes_dict[i].ef}')
+    #forward
+
+
+        
+
+
 
 
 def create():

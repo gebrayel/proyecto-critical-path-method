@@ -18,7 +18,7 @@ class  Node:
     def visitForward (self):
         self.visitedForward = True
 
-    def visitForward (self):
+    def visitBackward (self):
         self.visitedBackward = True
 
     def add_predecesor (self, pred: int):
