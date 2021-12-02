@@ -100,10 +100,13 @@ def create():
             descripcion = str(input("Ingrese la descripcion de la actividad: "))
             duracion = float(input("Ingrese la duracion de la actividad: "))      
             pre = input("Ingrese los ids de sus predecesores separados por comas: ")
+            while "0" in pre.split(",") and len(pre.split(",")) > 1:
+                pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
             pre= pre.split(",") 
             pres = []
             for p in pre:
                 pres.append(int(p))
+            
             valid = True
             while valid:
                 a = True
@@ -146,26 +149,9 @@ def create():
 
 def main():
     graph = create()
-    print(graph.nodes_dict)
-    print(graph.nodes_dict.items())
-    
-    ## esto de abajo deberia ir en otro lado
-    #sin_suc = []
-    #for node in graph.nodes_dict.items():
-    #        print(str(node[1].id)+" cantidad de nodos siguientes->"+str(len(node[1].suces)))
-    #        if len(node[1].suces) == 0:
-    #            sin_suc.append(node[1].id)
-#
-    #if len(sin_suc) == 1:
-    #    return
-    #else:
-    #    print("No se puede tener un grafo abierto. Escoga el id de su nodo final: ")
-    #    for n in sin_suc:
-    #        print(n)
-    #    nodo_final = input()
-    #    sin_suc.remove(nodo_final)
-    #    for n in sin_suc:
-    #        graph.nodes_dict[n].add_sucesor(nodo_final)
+
+
+    cpm(graph)
 
     print('main proyecto')
 
