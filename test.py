@@ -1,3 +1,4 @@
+import sys
 list1 = [1, 2, 3, 4,"2", 5]
 list2 = [0, 2, 4, 6]
 
@@ -9,4 +10,4 @@ list3 = list(set3)
 
 # print(list3)
 
-print(list1.index("2"))
+print(sys.maxsize )
