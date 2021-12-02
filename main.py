@@ -78,8 +78,12 @@ def cpm(graphVal: Graph):
         sucNodes:list = []
         actual = arrayQueue.pop(0)
         if actual in firstList:
-            graphX.nodes_dict[actual].lf = graphX.nodes_dict[actual].ef
-            graphX.nodes_dict[actual].ls = graphX.nodes_dict[actual].es
+            maxEfbP = 0
+            for i in firstList:
+                if graphX.nodes_dict[i].ef > maxEfbP:
+                    maxEfbP = graphX.nodes_dict[i].ef
+            graphX.nodes_dict[actual].lf = maxEfbP
+            graphX.nodes_dict[actual].ls = maxEfbP - graphX.nodes_dict[actual].duration
             for i in graphX.nodes_dict[actual].pred:
                 if i not in arrayQueue:
                     arrayQueue.append(i)
@@ -107,7 +111,58 @@ def cpm(graphVal: Graph):
         print(f'Nodo: {i}, LS: {graphX.nodes_dict[i].ls}, LF: {graphX.nodes_dict[i].lf}')
     #backward
 
+    #holguras
+    for i in nodesId:
+        sum = graphX.nodes_dict[i].ls - graphX.nodes_dict[i].es
+        if sum != 0:
+                graphX.nodes_dict[i].holgura = sum
+    #holguras
 
+    #CPM
+    path = []
+    start = []
+    end = []
+
+    for i in nodesId:
+        if graphX.nodes_dict[i].pred[0] == 0:
+            start.append(graphX.nodes_dict[graphX.nodes_dict[i].pred[0]])
+    auxiliaryArray: list = []
+
+    for i in alterNodesId:
+        for j in graphX.nodes_dict[i].pred:
+            if j not in auxiliaryArray:
+                auxiliaryArray.append(j)
+    setAll = set(alterNodesId)
+    setPred = set(auxiliaryArray)
+    setLast = (setAll - setPred) 
+    end = list(setLast)
+
+    actualId = ""
+    loop = True 
+    for i in start:
+            if graphX.nodes_dict[i].holgura == 0:
+                actualId = i
+    while loop:
+        sucChoose = []
+        path.append(actualId)
+
+        for i in nodesId:
+            if actualId in graphX.nodes_dict[i].pred:
+                sucChoose.append(i)
+
+        for i in sucChoose:
+            if graphX.nodes_dict[i].holgura == 0:
+                actualId = i
+                break
+        
+        loop = False
+
+    print(f'CPM: {((i+"==>" if i!=path[len(path)-1] else i) for i in path)}')
+    print(f'{"INICIAL" if len(start)==1 else "INICIALES"}\n{((i+", " if i!=start[len(start)-1] else i) for i in start)}')
+    print(f'{"FINAL" if len(start)==1 else "FINALES"}\n{((i+", " if i!=end[len(end)-1] else i) for i in end)}')
+
+
+    #CPM
 
 
         
