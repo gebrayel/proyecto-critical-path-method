@@ -12,6 +12,30 @@ graphX: Graph
 nodesId = []
 
 # def forwardPass():
+def check_user_input(input):
+    var = False
+    try:
+        # Convert it into integer
+        val = int(input)
+        var = True
+        if val <=0 :
+            var = False
+            print("Hubo un error en el input")
+    except ValueError:
+        try:
+            # Convert it into float
+            val = float(input)
+            var = True
+            if val <=0 :
+                var = False
+                print("Hubo un error en el input")
+        except ValueError:
+            print("Hubo un error en el input")
+    
+
+    return var
+
+
 
 
 def cpm(graphVal: Graph):
@@ -213,9 +237,19 @@ def create():
         #    print ("2. No")
         #    loop = str(input("Ingrese 1 o 2 segun corresponda: "))
 
-            id = input("Ingrese el id de la actividad: ")
+
+            id = input("Ingrese el id de la actividad (que no sea cero): ")
+            while id in nodesId:
+                id = input("Existe una actividad con el ID indcado. Indique otro id: ")
             descripcion = str(input("Ingrese la descripcion de la actividad: "))
-            duracion = float(input("Ingrese la duracion de la actividad: "))      
+            duracion = input("Ingrese la duracion de la actividad: ")
+            boo = check_user_input(duracion)
+            while boo == False:
+                duracion = input("Ingrese la duracion de la actividad: ")
+                if duracion == '':
+                    duracion = 's'
+                boo = check_user_input(duracion)
+            duracion = float(duracion)
             pre = input("Ingrese los ids de sus predecesores separados por comas: ")
             while "0" in pre.split(",") and len(pre.split(",")) > 1:
                 pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
@@ -250,7 +284,10 @@ def create():
             print("Está listo su grafo?: ")
             print ("1. Si")
             print ("2. No")
+            caso =["1","2"]
             loop = input("Ingrese 1 o 2 segun corresponda: ")
+            while loop not in caso:
+                loop = input("Ingrese 1 o 2 segun corresponda: ")
 
     return graph
 
@@ -264,10 +301,128 @@ def create():
 
 
 def main():
+    opciones = [1,2,3,4,5,6]
+    opciones2 = [1,2,3,4,5,6,7]
+    print("\n")
+    print("Bienvenido. En vista de que es su primera vez accediendo al programa, deberá armar un grafo con las actividades.")
+    print("\n")
     graph = create()
+    print("Su grafo se encuentra creado. Indique qué desea realizar: ")
+    opcion = 1
+    while opcion in opciones:
+
+        print("\n")
+        print("Menú")
+        print("1. Verificar ruta crítica.")
+        print("2. Añadir una nueva actividad al grafo")
+        print("3. Verificar existencia de actividad en el grafo")
+        print("4. Solicitar descripción de actividad en el grafo")
+        print("5. Alterar descripción de actividad en el grafo")
+        print("6. Alterar tiempo de duración de actividad en el grafo")
+        print("7. Cerrar programa")
+        
+        opcion = int(input("Ingrese 1,2,3,4,5,6 ó 7 según corresponda: "))
+        while opcion not in opciones2:
+            opcion = int(input("Ingrese 1,2,3,4,5,6 ó 7 según corresponda: "))
+        
+        print("\n")
+    
+        if opcion == 1:
+            cpm(graph)
+        elif opcion == 2:
+            loop = "2"
+
+            while loop == "2":
+                    id = input("Ingrese el id de la actividad: ")
+                    while id in nodesId:
+                        id = input("Existe una actividad con el ID indcado. Indique otro id: ")
+                    descripcion = str(input("Ingrese la descripcion de la actividad: "))
+                    duracion = input("Ingrese la duracion de la actividad: ")
+                    boo = check_user_input(duracion)
+                    while boo == False:
+                        duracion = input("Ingrese la duracion de la actividad: ")
+                        if duracion == '':
+                            duracion = 's'
+                        boo = check_user_input(duracion)
+                    duracion = float(duracion)      
+                    pre = input("Ingrese los ids de sus predecesores separados por comas: ")
+                    while "0" in pre.split(",") and len(pre.split(",")) > 1:
+                        pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
+                    pre = pre.split(",") 
+                    
+                    valid = True
+                    while valid:
+                        a = True
+                        for p in pre:
+                            if p not in nodesId not in nodesId:
+                                a = False
+                                break
+                        if a == False:
+                            pre = input(f"No existe un nodo {p} en el grafo. Ingrese los ids de sus predecesores separados por comas: ")
+                            pre = pre.split(",")
+                        else:
+                            valid = False
+
+                    graph.add_node(id, descripcion, duracion, pre)
+                    nodesId.append(id)
+                    print("Está listo su grafo?: ")
+                    print ("1. Si")
+                    print ("2. No")
+                    caso =["1","2"]
+                    loop = input("Ingrese 1 o 2 segun corresponda: ")
+                    while loop not in caso:
+                        loop = input("Ingrese 1 o 2 segun corresponda: ")
+
+        elif opcion == 3:
+            verificar = input("Indique el ID del nodo que desea verificar se encuentra dentro del grafo: ")
+            while verificar not in nodesId or verificar == '0':
+                print("El ID indicado no se encuentra en el grafo o es 0.")
+            else:
+                print("El ID indicado se encuentra en el grafo.")
 
 
-    cpm(graph)
+        elif opcion == 4:
+            verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
+            while verificar not in nodesId or verificar == '0':
+                print("El ID indicado no se encuentra en el grafo o es 0.")
+                verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
+            else:
+                print("Descripción: ")
+                print(graph.nodes_dict[verificar].description)
+                print("Duración: ")
+                print(graph.nodes_dict[verificar].duration)
+        
+        elif opcion == 5:
+            verificar = input("Indique el ID del nodo que desea alterar su descripción: ")
+            while verificar not in nodesId or verificar == '0':
+                print("El ID indicado no se encuentra en el grafo o es 0.")
+                verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
+            else:
+                print("Descripción anterior: ")
+                print(graph.nodes_dict[verificar].description)
+                descripcionN = input("Ingrese la nueva descripción: ")
+                graph.nodes_dict[verificar].set_description(descripcionN)
+        
+        elif opcion == 6:
+            verificar = input("Indique el ID del nodo que desea alterar su descripción: ")
+            while verificar not in nodesId or verificar == '0':
+                print("El ID indicado no se encuentra en el grafo o es 0.")
+                verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
+            else:
+                print("Duración anterior: ")
+                print(graph.nodes_dict[verificar].description)
+                dura = input("Ingrese la nueva duracion de la actividad: ")
+                boos = check_user_input(dura)
+                while boos == False:
+                    dura = input("Ingrese la duracion de la actividad: ")
+                    if dura == '':
+                        dura = 's'
+                    boos = check_user_input(dura)
+                dura = float(dura) 
+                graph.nodes_dict[verificar].set_duration(dura)
+
+
+    
 
     print('main proyecto')
 

@@ -29,6 +29,9 @@ class  Node:
 
     def set_description(self, description: str):
         self.description = description
+    
+    def set_duration(self, duration: float):
+        self.duration = duration
 
     def set_es(self, es: float):
         self.es = es
