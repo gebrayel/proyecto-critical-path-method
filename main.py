@@ -53,8 +53,55 @@ def cpm(graphVal: Graph):
     for i in nodesId:
         print(f'Nodo: {i}, ES: {graphX.nodes_dict[i].es}, EF: {graphX.nodes_dict[i].ef}')
     #forward
-
+    alterNodesId = nodesId
+    alterNodesId.pop(0)
     #backward
+    auxiliaryArray: list = []
+    for i in alterNodesId:
+        for j in graphX.nodes_dict[i].pred:
+            if j not in auxiliaryArray:
+                auxiliaryArray.append(j)
+    setAll = set(alterNodesId)
+    setPred = set(auxiliaryArray)
+    setLast = (setAll - setPred) 
+    firstList = list(setLast)
+    for j in firstList:
+        arrayQueue.append(j)
+        index = alterNodesId.index(j)
+        alterNodesId.pop(index)
+    
+    while len(arrayQueue) != 0:
+        predNodes:list = []
+        sucNodes:list = []
+        actual = arrayQueue.pop(0)
+        if actual in firstList:
+            graphX.nodes_dict[actual].lf = graphX.nodes_dict[actual].ef
+            graphX.nodes_dict[actual].ls = graphX.nodes_dict[actual].es
+            for i in graphX.nodes_dict[actual].pred:
+                if i not in arrayQueue:
+                    arrayQueue.append(i)
+        else:
+            for i in alterNodesId:
+                if i in graphX.nodes_dict[i].pred:
+                    sucNodes.append(i)
+            valid = True
+            for j in sucNodes:
+                if graphX.nodes_dict[j].ls == 0:
+                    valid = False
+                    break
+            
+            if valid:
+                maxLS = 0
+                for i in sucNodes:
+                    if graphX.nodes_dict[i].ls > maxLS:
+                        maxLS = graphX.nodes_dict[i].ls
+                graphX.nodes_dict[actual].lf = maxLS
+                graphX.nodes_dict[actual].ls = maxLS - graphX.nodes_dict[actual].duration
+                for j in graphX.nodes_dict[actual].pred:
+                    if j != 0 and j not in arrayQueue:
+                        arrayQueue.append(j)
+    for i in nodesId:
+        print(f'Nodo: {i}, LS: {graphX.nodes_dict[i].ls}, LF: {graphX.nodes_dict[i].lf}')
     
     #backward
 
