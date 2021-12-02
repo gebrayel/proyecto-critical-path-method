@@ -59,7 +59,6 @@ def cpm(graphVal: Graph):
     #alterNodesId.pop(0)
 
     #backward
-    print(alterNodesId)
     auxiliaryArray: list = []
     for i in alterNodesId:
         for j in graphX.nodes_dict[i].pred:
@@ -73,8 +72,6 @@ def cpm(graphVal: Graph):
         arrayQueue.append(j)
         index = alterNodesId.index(j)
         alterNodesId.pop(index)
-    print(alterNodesId)
-    print(nodesId)
     while len(arrayQueue) != 0:
         predNodes:list = []
         sucNodes:list = []
@@ -157,14 +154,13 @@ def cpm(graphVal: Graph):
         for i in nodesId:
             if actualId in graphX.nodes_dict[i].pred:
                 sucChoose.append(i)
-        print(sucChoose)
-        for i in sucChoose:
-            if graphX.nodes_dict[i].holgura == 0:
-                actualId = i
-                path.append(actualId)
-                break
-        final = actualId
-        loop = False
+        if len(sucChoose)!=0:
+            for i in sucChoose:
+                if graphX.nodes_dict[i].holgura == 0:
+                    actualId = i
+        else:            
+            final = actualId
+            loop = False
 
     pathStr = ""
     for i in path:
