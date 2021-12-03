@@ -383,7 +383,7 @@ def main():
                             duracion = 's'
                         boo = check_user_input(duracion)
                     duracion = float(duracion)      
-                    pre = input("Ingrese los ids de sus predecesores separados por comas: ")
+                    pre = input("Ingrese los ids de sus predecesores separados por comas. Si quiere añadir de predecesor al inicio ingrese 'inicio': ")
                     while "inicio" in pre.split(",") and len(pre.split(",")) > 1:
                         pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
                     pre = pre.split(",") 
