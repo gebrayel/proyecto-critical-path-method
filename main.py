@@ -1,7 +1,3 @@
-#import networkx as nx
-##import matplotlib.pyplot as plt
-#from networkx.algorithms import graph_hashing
-from networkx.algorithms.bipartite.basic import color
 from node import *
 from graph import *
 import sys
@@ -102,7 +98,6 @@ def cpm(graphVal: Graph):
     graphX.nodes_dict["final"].lf = graphX.nodes_dict["final"].ef
     graphX.nodes_dict["final"].ls = graphX.nodes_dict["final"].lf - graphX.nodes_dict["final"].duration
     indexA = alterNodesId.index("final")
-    print(f'alternodes: {alterNodesId}')
     alterNodesId.pop(indexA)
     for j in firstList:
         arrayQueue.append(j)
@@ -159,7 +154,6 @@ def cpm(graphVal: Graph):
     for m in nodesId:
         if graph.nodes_dict[m].holgura != 0:
             nodosHolguraId.append(m)
-    print(nodosHolguraId)
 
     #holguras
 
@@ -235,20 +229,15 @@ def cpm(graphVal: Graph):
     toList = []
 
     for i in nodesId:
-        print(graphX.nodes_dict[i].pred)
         for j in graphX.nodes_dict[i].pred:
             fromList.append(j)
             toList.append(i)
-    print(f'from = {fromList}')
-    print(f'to = {toList}')
     df = pd.DataFrame({
     'from': fromList,
     'to': toList
     })
-    print(df)
     
     G = nx.convert_matrix.from_pandas_edgelist(df, 'from', 'to')
-    print(f'g.edges = {G.edges()} ')
     red_edges = []
 
 
@@ -257,8 +246,6 @@ def cpm(graphVal: Graph):
             auxTup = (path[i-1],path[i])
             red_edges.append(auxTup)
     black_edges = [edge for edge in G.edges() if edge not in red_edges]
-    print(red_edges)
-    print(black_edges)
     edgesList = []
     colorList = []
     for i in red_edges:
@@ -291,28 +278,6 @@ def create():
     nodesId.append("inicio")
 
     while loop == "2":
-        #if len(nodesId) < 1:
-        #    print("Cree el nodo inicial")
-        #    id = int(input("Ingrese el id de la actividad: "))
-        #    descripcion = str(input("Ingrese la descripcion de la actividad: "))
-        #    duracion = float(input("Ingrese la duracion de la actividad: "))
-        #    predecesores = []
-        #    graph.add_node(id, descripcion, duracion, predecesores)
-        #    nodesId.append(id)
-
-        #    ##id2 = int(input("Ingrese el id de la 2da actividad: "))
-        #    ##descripcion2 = str(input("Ingrese la descripcion de la actividad: "))
-        #    ##duracion2 = float(input("Ingrese la duracion de la actividad: "))      
-        #    ##pre = [nodesId[0]]
-        #    ##graph.nodes_dict[id].add_sucesor(id2)
-##
-        #    ##graph.add_node(id2, descripcion2, duracion2, pre)
-        #    ##nodesId.append(id2)
-
-        #    print("Está listo su grafo?: ")
-        #    print ("1. Si")
-        #    print ("2. No")
-        #    loop = str(input("Ingrese 1 o 2 segun corresponda: "))
 
 
             id = input("Ingrese el id de la actividad (que no sea inicio): ")
@@ -353,10 +318,7 @@ def create():
 
             graph.add_node(id, descripcion, duracion, pre)
             
-            #for p in pres:
-            #    print(p)
-            #    graph.nodes_dict[p].add_sucesor(id)
-            #    
+            
             nodesId.append(id)
             print("Está listo su grafo?: ")
             print ("1. Si")
@@ -459,7 +421,6 @@ def main():
                     pre = pre.split(",")
 
                     graph.add_node(id, descripcion, duracion, pre)
-                    print(graph.nodes_dict[id].pred)
                     nodesId.append(id)
                     print("Está listo su grafo?: ")
                     print ("1. Si")
@@ -471,10 +432,8 @@ def main():
 
             auxiliaryArray = []
             alterNodesNow = []
-            print(f'nodeid = {nodesId}')
             for i in nodesId:
                 alterNodesNow.append(i)
-            print(f'alternodes = {alterNodesNow}')
             alterNodesNow.pop(0)
             ind = alterNodesNow.index("final")
             alterNodesNow.pop(ind)
@@ -482,7 +441,6 @@ def main():
                 for j in graph.nodes_dict[i].pred:
                     if j not in auxiliaryArray:
                         auxiliaryArray.append(j)
-            print(f'auxiliaryarray = {auxiliaryArray}')
             setAll = set(alterNodesNow)
             setPred = set(auxiliaryArray)
             setLast = (setAll - setPred) 
@@ -553,7 +511,6 @@ def main():
             toList = []
 
             for i in nodesId:
-                print(graphX1.nodes_dict[i].pred)
                 for j in graphX1.nodes_dict[i].pred:
                     fromList.append(j)
                     toList.append(i)
@@ -571,23 +528,6 @@ def main():
 
             # nx.drawing.nx_pylab.draw_networkx (G,  arrows=True, with_labels=True, edgelist=black_edges,)
             plt.show()
-
-
-
-    print('main proyecto')
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
