@@ -411,6 +411,18 @@ def main():
                     while loop not in caso:
                         loop = input("Ingrese 1 o 2 segun corresponda: ")
 
+            auxiliaryArray = []
+            for i in nodesId:
+                for j in graph.nodes_dict[i].pred:
+                    if j not in auxiliaryArray:
+                        auxiliaryArray.append(j)
+            setAll = set(nodesId)
+            setPred = set(auxiliaryArray)
+            setLast = (setAll - setPred) 
+            end = list(setLast)
+            graph.nodes_dict["final"].pred = end
+
+
         elif opcion == 3:
             verificar = input("Indique el ID del nodo que desea verificar se encuentra dentro del grafo: ")
             while verificar not in nodesId or verificar == "inicio":
