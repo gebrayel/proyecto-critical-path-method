@@ -7,6 +7,7 @@ import sys
 
 
 graph : Graph
+newGraph : Graph
 graphX1: Graph
 nodesId = []
 
@@ -140,7 +141,6 @@ def cpm(graphVal: Graph):
         print(f'Nodo: {i}, LS: {graphX.nodes_dict[i].ls}, LF: {graphX.nodes_dict[i].lf}')
 
 
-    
     #backward
 
     #holguras
@@ -148,6 +148,14 @@ def cpm(graphVal: Graph):
         sum = graphX.nodes_dict[i].ls - graphX.nodes_dict[i].es
         if sum != 0:
                 graphX.nodes_dict[i].holgura = sum
+
+    print("\n")
+    nodosHolguraId = []
+    for m in nodesId:
+        if graph.nodes_dict[m].holgura != 0:
+            nodosHolguraId.append(m)
+    print(nodosHolguraId)
+
     #holguras
 
     #CPM
@@ -207,7 +215,12 @@ def cpm(graphVal: Graph):
     print(f'TIEMPO DE DURACION DEL CP: {totalDuration}')
     print(f'INICIAL: { graphX.nodes_dict["inicio"].description }')
     print(f'FINAL: { graphX.nodes_dict["final"].description }')
+    print("\n")
+    print("Nodos con holgura")
+    for n in nodosHolguraId:
+        print(f"Nodo: {n}, Holgura: {graph.nodes_dict[n].holgura}")
 
+    
     #CPM
 
     global graphX1 
@@ -324,16 +337,17 @@ def create():
 
 
 def main():
-    opciones = [1,2,3,4,5,6]
-    opciones2 = [1,2,3,4,5,6,7]
+    opciones = [1,2,3,4,5,6,7]
+    opciones2 = [1,2,3,4,5,6,7,8]
     print("\n")
     print("Bienvenido. En vista de que es su primera vez accediendo al programa, deberá armar un grafo con las actividades.")
     print("\n")
     graph = create()
-    print("Su grafo se encuentra creado. Indique qué desea realizar: ")
+    #print("Su grafo se encuentra creado. Indique qué desea realizar: ")
     opcion = 1
     while opcion in opciones:
-
+        print("\n")
+        print("Su grafo se encuentra creado. Indique qué desea realizar: ")
         print("\n")
         print("Menú")
         print("1. Verificar ruta crítica.")
@@ -342,11 +356,12 @@ def main():
         print("4. Solicitar descripción de actividad en el grafo")
         print("5. Alterar descripción de actividad en el grafo")
         print("6. Alterar tiempo de duración de actividad en el grafo")
-        print("7. Cerrar programa")
+        print("7. Borrar el grafo existente y crear uno nuevo")
+        print("8. Cerrar programa")
         
-        opcion = int(input("Ingrese 1,2,3,4,5,6 ó 7 según corresponda: "))
+        opcion = int(input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
         while opcion not in opciones2:
-            opcion = int(input("Ingrese 1,2,3,4,5,6 ó 7 según corresponda: "))
+            opcion = int(input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
         
         print("\n")
     
@@ -444,8 +459,16 @@ def main():
                 dura = float(dura) 
                 graph.nodes_dict[verificar].set_duration(dura)
 
+        elif opcion == 7:
+            newGraph = Graph()
+            graph = newGraph
+            
+            print("Arme su nuevo grafo con sus actividades")
+            print("\n")
+            graph = create()
 
-    
+
+
 
     print('main proyecto')
 
