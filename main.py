@@ -412,9 +412,9 @@ def main():
         print("8. Mostrar grafo")
         print("9. Cerrar programa")
         
-        opcion = (input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
+        opcion = (input("Ingrese 1,2,3,4,5,6,7,8 u 9 según corresponda: "))
         while opcion not in opciones2:
-            opcion = (input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
+            opcion = (input("Ingrese 1,2,3,4,5,6,7,8 u 9 según corresponda: "))
         
         print("\n")
     
