@@ -1,9 +1,13 @@
 #import networkx as nx
 ##import matplotlib.pyplot as plt
 #from networkx.algorithms import graph_hashing
+from networkx.algorithms.bipartite.basic import color
 from node import *
 from graph import *
 import sys
+import pandas as pd
+import networkx as nx
+from matplotlib import pyplot as plt
 
 
 graph : Graph
@@ -213,6 +217,50 @@ def cpm(graphVal: Graph):
     global graphX1 
     graphX1 = graphX
 
+    fromList = []
+    toList = []
+
+    for i in nodesId:
+        print(graphX.nodes_dict[i].pred)
+        for j in graphX.nodes_dict[i].pred:
+            fromList.append(j)
+            toList.append(i)
+    df = pd.DataFrame({
+    'from': fromList,
+    'to': toList
+    })
+
+    G = nx.from_pandas_edgelist(df, 'from', 'to')
+
+    red_edges = []
+
+
+    for i in range(len(path)):
+        if i != 0:
+            auxTup = (path[i-1],path[i])
+            red_edges.append(auxTup)
+    black_edges = [edge for edge in G.edges() if edge not in red_edges]
+    print(red_edges)
+    print(black_edges)
+    edgesList = []
+    colorList = []
+    for i in red_edges:
+        edgesList.append(i)
+        colorList.append('red')
+    for i in black_edges:
+        edgesList.append(i)
+        colorList.append('black')
+    
+
+    values = [('green' if node == 'inicio' or node == "final"  else ('blue')) for node in G.nodes()]
+    # nx.draw(G,  arrows=True, with_labels=True, node_size = 1000, node_color = values)
+    nx.drawing.nx_pylab.draw_networkx (G,  arrows=True, with_labels=True, edgelist=edgesList, edge_color=colorList, node_size = 1000, node_color = values)
+
+    # nx.drawing.nx_pylab.draw_networkx (G,  arrows=True, with_labels=True, edgelist=black_edges,)
+    plt.show()
+
+    
+
 
 
 
@@ -358,7 +406,7 @@ def main():
             while loop == "2":
                     id = input("Ingrese el id de la actividad: ")
                     while id in nodesId:
-                        id = input("Existe una actividad con el ID indcado. Indique otro id: ")
+                        id = input("Existe una actividad con el ID indicado. Indique otro id: ")
                     descripcion = str(input("Ingrese la descripcion de la actividad: "))
                     duracion = input("Ingrese la duracion de la actividad: ")
                     boo = check_user_input(duracion)
@@ -370,7 +418,7 @@ def main():
                     duracion = float(duracion)      
                     pre = input("Ingrese los ids de sus predecesores separados por comas: ")
                     while "inicio" in pre.split(",") and len(pre.split(",")) > 1:
-                        pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
+                        pre = input("No puede tener como predecesores de un nodo al nodo inicio y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
                     pre = pre.split(",") 
                     
                     valid = True

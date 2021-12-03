@@ -1,5 +1,5 @@
-# import networkx as nx
-# import matplotlib.pyplot as plt
+import networkx as nx
+import matplotlib.pyplot as plt
 
 # G = nx.DiGraph()
 # G.add_edges_from(
@@ -13,7 +13,7 @@
 # values = [val_map.get(node, 0.25) for node in G.nodes()]
 
 # # Specify the edges you want here
-# red_edges = [('A', 'C'), ('E', 'C')]
+# red_edges = [['A', 'C'], ['E', 'C']]
 # edge_colours = ['black' if not edge in red_edges else 'red'
 #                 for edge in G.edges()]
 # black_edges = [edge for edge in G.edges() if edge not in red_edges]
@@ -36,16 +36,21 @@ df = pd.DataFrame({
     'from': ['Node1', 'Node1', 'Node2', 'Node2'],
     'to': ['Node2', 'Node3', 'Node4', 'Node5']
 })
- 
+red_edges = [['Node1', 'Node2'], ['Node2', 'Node4']]
+black_edges = [['Node1', 'Node3'], ['Node2', 'Node5']]
 G = nx.from_pandas_edgelist(df, 'from', 'to')
- 
-positions = {
-    'Node1': (0, 0),
-    'Node2': (1, 1),
-    'Node3': (1, -1),
-    'Node4': (2, 2),
-    'Node5': (2, 0),
-}  
+edgesList = [['Node1', 'Node2'], ['Node2', 'Node4'],['Node1', 'Node3'], ['Node2', 'Node5']]
+edges_color = ['red','red','black','black']
+# positions = {
+#     'Node1': [0,10],
+#     'Node2': (1, 1),
+#     'Node3': (1, -1),
+#     'Node4': (2, 2),
+#     'Node5': (2, 0),
+# }  
 
-nx.draw(G, pos=positions, arrows=True, with_labels=True)
+# nx.draw(G, pos=positions, arrows=True, with_labels=True)
+nx.drawing.nx_pylab.draw_networkx (G, arrows=True, with_labels=True, edgelist=edgesList, edge_color=edges_color)
+
+# nx.drawing.nx_pylab.draw_networkx (G, pos=positions, arrows=True, with_labels=True, edgelist=black_edges,)
 plt.show()
