@@ -416,6 +416,10 @@ def main():
                         else:
                             valid = False
 
+                    while "final" in pre:
+                        pre = input("No puede tener como predecesores de un nodo al nodo final. Ingrese los ids de sus predecesores separados por comas: ")
+                    pre = pre.split(",")
+
                     graph.add_node(id, descripcion, duracion, pre)
                     nodesId.append(id)
                     print("Está listo su grafo?: ")
