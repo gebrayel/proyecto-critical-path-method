@@ -102,6 +102,7 @@ def cpm(graphVal: Graph):
     graphX.nodes_dict["final"].lf = graphX.nodes_dict["final"].ef
     graphX.nodes_dict["final"].ls = graphX.nodes_dict["final"].lf - graphX.nodes_dict["final"].duration
     indexA = alterNodesId.index("final")
+    print(f'alternodes: {alterNodesId}')
     alterNodesId.pop(indexA)
     for j in firstList:
         arrayQueue.append(j)
@@ -238,13 +239,16 @@ def cpm(graphVal: Graph):
         for j in graphX.nodes_dict[i].pred:
             fromList.append(j)
             toList.append(i)
+    print(f'from = {fromList}')
+    print(f'to = {toList}')
     df = pd.DataFrame({
     'from': fromList,
     'to': toList
     })
-
-    G = nx.from_pandas_edgelist(df, 'from', 'to')
-
+    print(df)
+    
+    G = nx.convert_matrix.from_pandas_edgelist(df, 'from', 'to')
+    print(f'g.edges = {G.edges()} ')
     red_edges = []
 
 
@@ -385,14 +389,14 @@ def create():
 
 
 def main():
-    opciones = [1,2,3,4,5,6,7]
-    opciones2 = [1,2,3,4,5,6,7,8]
+    opciones = ["1","2","3","4","5","6","7","8"]
+    opciones2 = ["1","2","3","4","5","6","7","8","9"]
     print("\n")
     print("Bienvenido. En vista de que es su primera vez accediendo al programa, deberá armar un grafo con las actividades.")
     print("\n")
     graph = create()
     #print("Su grafo se encuentra creado. Indique qué desea realizar: ")
-    opcion = 1
+    opcion = "1"
     while opcion in opciones:
         print("\n")
         print("Su grafo se encuentra creado. Indique qué desea realizar: ")
@@ -405,17 +409,18 @@ def main():
         print("5. Alterar descripción de actividad en el grafo")
         print("6. Alterar tiempo de duración de actividad en el grafo")
         print("7. Borrar el grafo existente y crear uno nuevo")
-        print("8. Cerrar programa")
+        print("8. Mostrar grafo")
+        print("9. Cerrar programa")
         
-        opcion = int(input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
+        opcion = (input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
         while opcion not in opciones2:
-            opcion = int(input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
+            opcion = (input("Ingrese 1,2,3,4,5,6,7 u 8 según corresponda: "))
         
         print("\n")
     
-        if opcion == 1:
+        if opcion == "1":
             cpm(graph)
-        elif opcion == 2:
+        elif opcion == "2":
             loop = "2"
 
             while loop == "2":
@@ -450,6 +455,7 @@ def main():
                             valid = False
 
                     graph.add_node(id, descripcion, duracion, pre)
+                    print(graph.nodes_dict[id].pred)
                     nodesId.append(id)
                     print("Está listo su grafo?: ")
                     print ("1. Si")
@@ -460,18 +466,30 @@ def main():
                         loop = input("Ingrese 1 o 2 segun corresponda: ")
 
             auxiliaryArray = []
+            alterNodesNow = []
+            print(f'nodeid = {nodesId}')
             for i in nodesId:
+                alterNodesNow.append(i)
+            print(f'alternodes = {alterNodesNow}')
+            alterNodesNow.pop(0)
+            ind = alterNodesNow.index("final")
+            alterNodesNow.pop(ind)
+            for i in alterNodesNow:
                 for j in graph.nodes_dict[i].pred:
                     if j not in auxiliaryArray:
                         auxiliaryArray.append(j)
-            setAll = set(nodesId)
+            print(f'auxiliaryarray = {auxiliaryArray}')
+            setAll = set(alterNodesNow)
             setPred = set(auxiliaryArray)
             setLast = (setAll - setPred) 
             end = list(setLast)
             graph.nodes_dict["final"].pred = end
+            inde = nodesId.index("final")
+            nodesId.pop(inde)
+            nodesId.append("final")
 
 
-        elif opcion == 3:
+        elif opcion == "3":
             verificar = input("Indique el ID del nodo que desea verificar se encuentra dentro del grafo: ")
             while verificar not in nodesId or verificar == "inicio":
                 print("El ID indicado no se encuentra en el grafo o es 0.")
@@ -479,7 +497,7 @@ def main():
                 print("El ID indicado se encuentra en el grafo.")
 
 
-        elif opcion == 4:
+        elif opcion == "4":
             verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
             while verificar not in nodesId or verificar == "inicio":
                 print("El ID indicado no se encuentra en el grafo o es inicio.")
@@ -490,7 +508,7 @@ def main():
                 print("Duración: ")
                 print(graph.nodes_dict[verificar].duration)
         
-        elif opcion == 5:
+        elif opcion == "5":
             verificar = input("Indique el ID del nodo que desea alterar su descripción: ")
             while verificar not in nodesId or verificar == "inicio":
                 print("El ID indicado no se encuentra en el grafo o es inicio.")
@@ -501,14 +519,14 @@ def main():
                 descripcionN = input("Ingrese la nueva descripción: ")
                 graph.nodes_dict[verificar].set_description(descripcionN)
         
-        elif opcion == 6:
+        elif opcion == "6":
             verificar = input("Indique el ID del nodo que desea alterar su tiempo de duracion: ")
             while verificar not in nodesId or verificar == "inicio":
                 print("El ID indicado no se encuentra en el grafo o es inicio.")
                 verificar = input("Indique el ID del nodo que desea verificar su tiempo de duracion: ")
             else:
                 print("Duración anterior: ")
-                print(graph.nodes_dict[verificar].description)
+                print(graph.nodes_dict[verificar].duration)
                 dura = input("Ingrese la nueva duracion de la actividad: ")
                 boos = check_user_input(dura)
                 while boos == False:
@@ -519,14 +537,36 @@ def main():
                 dura = float(dura) 
                 graph.nodes_dict[verificar].set_duration(dura)
 
-        elif opcion == 7:
+        elif opcion == "7":
             newGraph = Graph()
             graph = newGraph
             
             print("Arme su nuevo grafo con sus actividades")
             print("\n")
             graph = create()
+        elif opcion == "8":
+            fromList = []
+            toList = []
 
+            for i in nodesId:
+                print(graphX1.nodes_dict[i].pred)
+                for j in graphX1.nodes_dict[i].pred:
+                    fromList.append(j)
+                    toList.append(i)
+            df = pd.DataFrame({
+            'from': fromList,
+            'to': toList
+            })
+            
+            G = nx.convert_matrix.from_pandas_edgelist(df, 'from', 'to')
+
+
+            values = [('green' if node == 'inicio' or node == "final"  else ('blue')) for node in G.nodes()]
+            # nx.draw(G,  arrows=True, with_labels=True, node_size = 1000, node_color = values)
+            nx.drawing.nx_pylab.draw_networkx (G,  arrows=True, with_labels=True, node_size = 1000, node_color = values)
+
+            # nx.drawing.nx_pylab.draw_networkx (G,  arrows=True, with_labels=True, edgelist=black_edges,)
+            plt.show()
 
 
 
