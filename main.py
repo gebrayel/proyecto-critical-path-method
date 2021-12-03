@@ -507,7 +507,7 @@ def main():
             toList = []
 
             for i in nodesId:
-                for j in graphX1.nodes_dict[i].pred:
+                for j in graph.nodes_dict[i].pred:
                     fromList.append(j)
                     toList.append(i)
             df = pd.DataFrame({
