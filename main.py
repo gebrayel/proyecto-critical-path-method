@@ -1,14 +1,13 @@
 #import networkx as nx
 ##import matplotlib.pyplot as plt
 #from networkx.algorithms import graph_hashing
-from typing import ForwardRef
 from node import *
 from graph import *
 import sys
 
 
 graph : Graph
-graphX: Graph
+graphX1: Graph
 nodesId = []
 
 # def forwardPass():
@@ -41,18 +40,21 @@ def check_user_input(input):
 def cpm(graphVal: Graph):
     alterNodesId:list = []
     arrayQueue:list = []
-    graphX = graphVal
+    graphX: Graph = graphVal
+    for i in nodesId:
+        graph.add_node(i, graphVal.nodes_dict[i].description, graphVal.nodes_dict[i].duration, graphVal.nodes_dict[i].pred)
     for node in nodesId:
         alterNodesId.append(node)
     #forward
     alterNodesId.pop(0)
+    
     for i in alterNodesId:
-            if graphX.nodes_dict[i].pred[0] == "0":
+            if graphX.nodes_dict[i].pred[0] == "inicio":
                 arrayQueue.append(graphX.nodes_dict[i].id)
     while len(arrayQueue) !=0:
         predNodes:list = []
         actual = arrayQueue.pop()
-        if graphX.nodes_dict[actual].pred[0] == "0":
+        if graphX.nodes_dict[actual].pred[0] == "inicio":
             graphX.nodes_dict[actual].ef += graphX.nodes_dict[actual].duration
             for j in alterNodesId:
                 if actual in graphX.nodes_dict[j].pred:
@@ -83,15 +85,19 @@ def cpm(graphVal: Graph):
     #alterNodesId.pop(0)
 
     #backward
-    auxiliaryArray: list = []
-    for i in alterNodesId:
-        for j in graphX.nodes_dict[i].pred:
-            if j not in auxiliaryArray:
-                auxiliaryArray.append(j)
-    setAll = set(alterNodesId)
-    setPred = set(auxiliaryArray)
-    setLast = (setAll - setPred) 
-    firstList = list(setLast)
+    # auxiliaryArray: list = []
+    # for i in alterNodesId:
+    #     for j in graphX.nodes_dict[i].pred:
+    #         if j not in auxiliaryArray:
+    #             auxiliaryArray.append(j)
+    # setAll = set(alterNodesId)
+    # setPred = set(auxiliaryArray)
+    # setLast = (setAll - setPred) 
+    firstList = graphX.nodes_dict["final"].pred
+    graphX.nodes_dict["final"].lf = graphX.nodes_dict["final"].ef
+    graphX.nodes_dict["final"].ls = graphX.nodes_dict["final"].lf - graphX.nodes_dict["final"].duration
+    indexA = alterNodesId.index("final")
+    alterNodesId.pop(indexA)
     for j in firstList:
         arrayQueue.append(j)
         index = alterNodesId.index(j)
@@ -133,6 +139,7 @@ def cpm(graphVal: Graph):
     for i in nodesId:
         print(f'Nodo: {i}, LS: {graphX.nodes_dict[i].ls}, LF: {graphX.nodes_dict[i].lf}')
 
+
     
     #backward
 
@@ -150,9 +157,10 @@ def cpm(graphVal: Graph):
     end = []
     final = ""
 
+    path.append("inicio")
     for i in nodesId:   
-        if i != "0":
-            if graphX.nodes_dict[i].pred[0] == "0":
+        if i != "inicio":
+            if graphX.nodes_dict[i].pred[0] == "inicio":
                 start.append(i)
     auxiliaryArray: list = []
 
@@ -187,31 +195,35 @@ def cpm(graphVal: Graph):
             loop = False
 
     pathStr = ""
+    totalDuration = graphX.nodes_dict["final"].es
     for i in path:
         if i != path[len(path)-1]:
             pathStr += i+" ==> "
         else:
             pathStr += i
-
     
     print(path)
     print(f'CPM: {pathStr}')
-    print(f'INICIAL: { inicio }')
-    print(f'FINAL: { final }')
+    print(f'TIEMPO DE DURACION DEL CP: {totalDuration}')
+    print(f'INICIAL: { graphX.nodes_dict["inicio"].description }')
+    print(f'FINAL: { graphX.nodes_dict["final"].description }')
 
     #CPM
 
-
-        
+    global graphX1 
+    graphX1 = graphX
 
 
 
 
 def create():
+    global graph 
     graph = Graph()
+    global nodesId
+    nodesId = []
     loop = "2"
-    graph.add_node("0", "nodo 0", 0, [])
-    nodesId.append("0")
+    graph.add_node("inicio", "nodo inicio", 0, [])
+    nodesId.append("inicio")
 
     while loop == "2":
         #if len(nodesId) < 1:
@@ -238,7 +250,7 @@ def create():
         #    loop = str(input("Ingrese 1 o 2 segun corresponda: "))
 
 
-            id = input("Ingrese el id de la actividad (que no sea cero): ")
+            id = input("Ingrese el id de la actividad (que no sea inicio): ")
             while id in nodesId:
                 id = input("Existe una actividad con el ID indcado. Indique otro id: ")
             descripcion = str(input("Ingrese la descripcion de la actividad: "))
@@ -251,7 +263,7 @@ def create():
                 boo = check_user_input(duracion)
             duracion = float(duracion)
             pre = input("Ingrese los ids de sus predecesores separados por comas: ")
-            while "0" in pre.split(",") and len(pre.split(",")) > 1:
+            while "inicio" in pre.split(",") and len(pre.split(",")) > 1:
                 pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
             pre = pre.split(",") 
             #pres = []
@@ -288,7 +300,18 @@ def create():
             loop = input("Ingrese 1 o 2 segun corresponda: ")
             while loop not in caso:
                 loop = input("Ingrese 1 o 2 segun corresponda: ")
+    auxiliaryArray: list = []
 
+    for i in nodesId:
+        for j in graph.nodes_dict[i].pred:
+            if j not in auxiliaryArray:
+                auxiliaryArray.append(j)
+    setAll = set(nodesId)
+    setPred = set(auxiliaryArray)
+    setLast = (setAll - setPred) 
+    end = list(setLast)
+    graph.add_node("final", "nodo final", 0, end)
+    nodesId.append("final")
     return graph
 
 
@@ -346,7 +369,7 @@ def main():
                         boo = check_user_input(duracion)
                     duracion = float(duracion)      
                     pre = input("Ingrese los ids de sus predecesores separados por comas: ")
-                    while "0" in pre.split(",") and len(pre.split(",")) > 1:
+                    while "inicio" in pre.split(",") and len(pre.split(",")) > 1:
                         pre = input("No puede tener como predecesores de un nodo al nodo 0 y a otro nodo. Ingrese los ids de sus predecesores separados por comas: ")
                     pre = pre.split(",") 
                     
@@ -375,7 +398,7 @@ def main():
 
         elif opcion == 3:
             verificar = input("Indique el ID del nodo que desea verificar se encuentra dentro del grafo: ")
-            while verificar not in nodesId or verificar == '0':
+            while verificar not in nodesId or verificar == "inicio":
                 print("El ID indicado no se encuentra en el grafo o es 0.")
             else:
                 print("El ID indicado se encuentra en el grafo.")
@@ -383,8 +406,8 @@ def main():
 
         elif opcion == 4:
             verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
-            while verificar not in nodesId or verificar == '0':
-                print("El ID indicado no se encuentra en el grafo o es 0.")
+            while verificar not in nodesId or verificar == "inicio":
+                print("El ID indicado no se encuentra en el grafo o es inicio.")
                 verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
             else:
                 print("Descripción: ")
@@ -394,8 +417,8 @@ def main():
         
         elif opcion == 5:
             verificar = input("Indique el ID del nodo que desea alterar su descripción: ")
-            while verificar not in nodesId or verificar == '0':
-                print("El ID indicado no se encuentra en el grafo o es 0.")
+            while verificar not in nodesId or verificar == "inicio":
+                print("El ID indicado no se encuentra en el grafo o es inicio.")
                 verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
             else:
                 print("Descripción anterior: ")
@@ -404,10 +427,10 @@ def main():
                 graph.nodes_dict[verificar].set_description(descripcionN)
         
         elif opcion == 6:
-            verificar = input("Indique el ID del nodo que desea alterar su descripción: ")
-            while verificar not in nodesId or verificar == '0':
-                print("El ID indicado no se encuentra en el grafo o es 0.")
-                verificar = input("Indique el ID del nodo que desea verificar su descripción: ")
+            verificar = input("Indique el ID del nodo que desea alterar su tiempo de duracion: ")
+            while verificar not in nodesId or verificar == "inicio":
+                print("El ID indicado no se encuentra en el grafo o es inicio.")
+                verificar = input("Indique el ID del nodo que desea verificar su tiempo de duracion: ")
             else:
                 print("Duración anterior: ")
                 print(graph.nodes_dict[verificar].description)

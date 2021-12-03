@@ -1,13 +1,13 @@
-import sys
-list1 = [1, 2, 3, 4,"2", 5]
-list2 = [0, 2, 4, 6]
+ax=2
 
-set1 = set(list1)
-set2 = set(list2)
+def a():
+    b=ax
+    b+=1
+    print (b)
+    print(ax)
 
-set3 = (set1 - set2) | (set2 - set1)
-list3 = list(set3)
+def main():
+    a()
+    print(ax)
 
-# print(list3)
-
-print(sys.maxsize )
+main()
