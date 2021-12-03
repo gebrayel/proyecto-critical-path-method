@@ -273,14 +273,17 @@ def create():
     global nodesId
     nodesId = []
     loop = "2"
-    graph.add_node("inicio", "nodo inicio", 0, [])
+    descripcionIn = str(input("Ingrese la descripcion de la actividad inicio: "))
+    while descripcionIn.isspace() or not descripcionIn:
+        descripcionIn = str(input("Ingrese la descripcion de la actividad inicio no vacia: "))
+    graph.add_node("inicio", descripcionIn, 0, [])
     nodesId.append("inicio")
 
     while loop == "2":
 
 
             id = input("Ingrese el id de la actividad (que no sea inicio): ")
-            while id in nodesId or id.isspace or not id:
+            while id in nodesId or id.isspace() or not id:
                 id = input("Existe una actividad con el ID indicado o esta vacio. Indique otro id: ")
             descripcion = str(input("Ingrese la descripcion de la actividad: "))
             while descripcion.isspace() or not descripcion:
@@ -338,7 +341,10 @@ def create():
     setPred = set(auxiliaryArray)
     setLast = (setAll - setPred) 
     end = list(setLast)
-    graph.add_node("final", "nodo final", 0, end)
+    descripcionFin = str(input("Ingrese la descripcion de la actividad final: "))
+    while descripcionFin.isspace() or not descripcionFin:
+        descripcionFin = str(input("Ingrese la descripcion de la actividad final no vacia: "))
+    graph.add_node("final", descripcionFin, 0, end)
     nodesId.append("final")
     return graph
 

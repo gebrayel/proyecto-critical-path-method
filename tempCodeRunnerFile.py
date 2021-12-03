@@ -1,1 +1,1 @@
-1
+isspace
